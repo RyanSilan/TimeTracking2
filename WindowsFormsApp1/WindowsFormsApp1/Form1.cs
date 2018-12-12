@@ -15,16 +15,17 @@ namespace WindowsFormsApp1
         public Form1()
         {
             InitializeComponent();
+            addCall1.setForm1(this); 
+           
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void NewCallBtn_Click(object sender, EventArgs e)
         {
-
+            dashboard1.Visible = false;
+            
+            addCall1.Visible = true; 
+            
         }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
+        
     }
 }
