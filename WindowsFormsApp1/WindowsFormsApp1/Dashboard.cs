@@ -21,19 +21,19 @@ namespace WindowsFormsApp1
         {
             InitializeComponent();
 
-            //Connection con = new Connection();
-            //SqlConnection sql = con.getConnection();
+            Connection con = new Connection();
+            SqlConnection sql = con.getConnection();
 
-            //string query = "SELECT * FROM dbo.Calls"; 
+            string query = "SELECT * FROM dbo.Calls"; 
 
-            //SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query, sql);
-            //SqlCommandBuilder sqlCommandBuilder = new SqlCommandBuilder(sqlDataAdapter);
-            //DataSet ds = new DataSet(); 
+            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query, sql);
+            SqlCommandBuilder sqlCommandBuilder = new SqlCommandBuilder(sqlDataAdapter);
+            DataSet ds = new DataSet(); 
 
-            //sqlDataAdapter.Fill(ds);
+            sqlDataAdapter.Fill(ds);
 
-            //dataGridView1.ReadOnly = true;
-            //dataGridView1.DataSource = ds.Tables[0];
+            dataGridView1.ReadOnly = true;
+            dataGridView1.DataSource = ds.Tables[0];
 
             //var series = new Series("Calls");
             //series.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Bar;
