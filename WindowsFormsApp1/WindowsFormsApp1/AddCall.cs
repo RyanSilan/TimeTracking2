@@ -25,7 +25,9 @@ namespace WindowsFormsApp1
         private void submitBtn_Click(object sender, EventArgs e)
         {
             ExecuteQuery c = new ExecuteQuery();
-            c.addCall(Date.Text, Time.Text, callerName.Text, callerPhone.Text, callerCompany.Text, askingFor.Text, "Testing details", branch.Text); 
+            c.addCall(Date.Text, Time.Text, callerName.Text, callerPhone.Text, callerCompany.Text, askingFor.Text, "Testing details", branch.Text);
+            f.dashboard1.Visible = true;
+            resetFields();
         }
 
         private void CancelBtn_Click(object sender, EventArgs e)

@@ -17,6 +17,10 @@ namespace WindowsFormsApp1
 {
     public partial class Dashboard : UserControl
     {
+        Dictionary<string, string> pieChartData = new Dictionary<string, string>();
+        Dictionary<string, string> barChartData = new Dictionary<string, string>(); 
+
+
         public Dashboard()
         {
             InitializeComponent();
@@ -35,48 +39,57 @@ namespace WindowsFormsApp1
             dataGridView1.ReadOnly = true;
             dataGridView1.DataSource = ds.Tables[0];
 
-            //var series = new Series("Calls");
-            //series.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Bar;
-            //series.Points.DataBindXY(new[] { "Monday", "Tuesday", "Wednesday" }, new[] { 150, 125, 175 });
-            //chart1.Series.Add(series);
+            query = "select agents.Name, COUNT(*) from dbo.calls INNER JOIN dbo.agents ON calls.ID = agents.ID where calls.ID != '' group by agents.Name";
+
+            SqlCommand cmd = new SqlCommand(query, sql);
+
+            using (SqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    Console.WriteLine(reader[0].ToString() + " " + reader[1].ToString());
+                    pieChartData.Add(reader[0].ToString(), reader[1].ToString()); 
+                }
+
+            }
+
+            query = "select COUNT(*), date from dbo.calls where calls.date >= DATEADD(day,-7, GETDATE()) GROUP BY date";
+
+            cmd = new SqlCommand(query, sql);
+
+            using (SqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    Console.WriteLine(reader[0].ToString() + " " + reader[1].ToString());
+                    barChartData.Add(reader[0].ToString(), reader[1].ToString());
+                }
+
+            }
 
             Func<ChartPoint, string> labelPoint = chartPoint =>
                 string.Format("{0} ({1:P})", chartPoint.Y, chartPoint.Participation);
 
-            pieChart1.Series = new LiveCharts.SeriesCollection
+            pieChart1.Series = new LiveCharts.SeriesCollection(); 
+
+            
+
+            foreach (KeyValuePair<string, string> entry in pieChartData)
             {
-                new PieSeries
+                var temp = new PieSeries
                 {
-                    Title = "Maria",
-                    Values = new ChartValues<double> {3},
-                    //PushOut = 15,
+                    Title = entry.Key,
+                    Values = new ChartValues<double> { Convert.ToDouble(entry.Value) },
                     DataLabels = true,
                     LabelPoint = labelPoint
-                },
-                new PieSeries
-                {
-                    Title = "Charles",
-                    Values = new ChartValues<double> {4},
-                    DataLabels = true,
-                    LabelPoint = labelPoint
-                },
-                new PieSeries
-                {
-                    Title = "Frida",
-                    Values = new ChartValues<double> {6},
-                    DataLabels = true,
-                    LabelPoint = labelPoint
-                },
-                new PieSeries
-                {
-                    Title = "Frederic",
-                    Values = new ChartValues<double> {2},
-                    DataLabels = true,
-                    LabelPoint = labelPoint
-                }
-            };
+                };
+                pieChart1.Series.Add(temp); 
+            }
 
             pieChart1.LegendLocation = LegendLocation.Bottom;
+
+            
+            // could potentially use for chart
 
             cartesianChart1.Series = new SeriesCollection
             {
@@ -86,6 +99,18 @@ namespace WindowsFormsApp1
                     Values = new ChartValues<double> { 10, 50, 39, 50 }
                 }
             };
+
+            foreach (KeyValuePair<string, string> entry in pieChartData)
+            {
+                var temp = new PieSeries
+                {
+                    Title = entry.Key,
+                    Values = new ChartValues<double> { Convert.ToDouble(entry.Value) },
+                    DataLabels = true,
+                    LabelPoint = labelPoint
+                };
+                pieChart1.Series.Add(temp);
+            }
 
             //adding series will update and animate the chart automatically
             cartesianChart1.Series.Add(new ColumnSeries
