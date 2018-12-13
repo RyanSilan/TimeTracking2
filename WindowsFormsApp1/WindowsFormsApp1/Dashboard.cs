@@ -28,7 +28,7 @@ namespace WindowsFormsApp1
             Connection con = new Connection();
             SqlConnection sql = con.getConnection();
 
-            string query = "SELECT * FROM dbo.Calls"; 
+            string query = "SELECT top 100 * FROM dbo.Calls"; 
 
             SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query, sql);
             SqlCommandBuilder sqlCommandBuilder = new SqlCommandBuilder(sqlDataAdapter);
@@ -53,7 +53,7 @@ namespace WindowsFormsApp1
 
             }
 
-            query = "select COUNT(*), date from dbo.calls where calls.date >= DATEADD(day,-7, GETDATE()) GROUP BY date";
+            query = "select date, COUNT(*) from dbo.calls where calls.date >= DATEADD(day,-7, GETDATE()) GROUP BY date";
 
             cmd = new SqlCommand(query, sql);
 
@@ -99,18 +99,6 @@ namespace WindowsFormsApp1
                     Values = new ChartValues<double> { 10, 50, 39, 50 }
                 }
             };
-
-            foreach (KeyValuePair<string, string> entry in pieChartData)
-            {
-                var temp = new PieSeries
-                {
-                    Title = entry.Key,
-                    Values = new ChartValues<double> { Convert.ToDouble(entry.Value) },
-                    DataLabels = true,
-                    LabelPoint = labelPoint
-                };
-                pieChart1.Series.Add(temp);
-            }
 
             //adding series will update and animate the chart automatically
             cartesianChart1.Series.Add(new ColumnSeries
